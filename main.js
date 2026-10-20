@@ -763,7 +763,7 @@ function frame() {
   // the black block's caption is on the block: it comes up with it and goes as we fly into the monogram
   if (blackText) {
     blackText.style.transform = `translate3d(0, ${(1 - state.exit) * 100}vh, 0)`;
-    blackText.style.opacity = state.exit > 0.001 ? 1 - Math.min(1, state.hero * 12) : 0;   // gone as soon as the turn to the monogram starts
+    blackText.style.opacity = state.exit > 0.001 ? 1 - Math.min(1, state.hero * 3) : 0;
   }
   // the black block's fade rides up with it
   fadeEl.style.opacity = state.exit > 0.001 ? 1 - state.hero : 0;   // gone again as we fly into the monogram
