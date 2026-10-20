@@ -1,0 +1,108 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { background: #000; overflow-x: hidden; }
+html[data-theme="light"], html[data-theme="light"] body {
+  background: radial-gradient(120% 90% at 60% 45%, #faf8f4 0%, #ece8e1 55%, #d9d3c9 100%) fixed;
+}
+html[data-theme="light"] #text { color: #1d1d1f; }
+html[data-theme="light"] .tblock p { color: #6e6e73; }
+
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  z-index: 0;
+}
+
+#track { position: relative; height: 3450vh; }
+
+/* ---------- masked line reveals ---------- */
+#text { position: fixed; inset: 0; z-index: 2; pointer-events: none; color: #f5f5f7; }
+.tblock {
+  position: absolute; left: 7vw; top: 50%; transform: translateY(-50%);
+  width: min(46vw, 620px);
+}
+.tblock h2 {
+  font: 500 clamp(44px, 6.4vw, 104px)/1.02 -apple-system, "SF Pro Display", "Inter Tight", sans-serif;
+  letter-spacing: -0.035em;
+}
+.tblock p {
+  margin-top: 28px; max-width: 300px; margin-left: 40%;
+  font: 400 15px/1.45 -apple-system, "SF Pro Text", "Inter", sans-serif;
+  letter-spacing: -0.01em; color: #c9c9cc;
+}
+.mask { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.ln { display: block; will-change: transform; }   /* start position is set by GSAP (yPercent: 110) */
+.rot { position: relative; display: inline-grid; vertical-align: top; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }  /* own mask: words never leak */
+.rot .w { grid-area: 1 / 1; display: inline-block; will-change: transform; }
+
+@media (max-width: 760px) {
+  .tblock { left: 16px; right: 16px; top: auto; bottom: 8vh; transform: none; max-width: none; }
+  .tblock h2 { font-size: 44px; }
+  .tblock p { margin-left: 0; margin-top: 14px; }
+}
+
+/* text on the light panel */
+#text { transition: color .6s ease; }
+html.on-white #text { color: #1d1d1f; }
+html.on-white .tblock p { color: #6e6e73; }
+.tblock p { transition: color .6s ease; }
+
+/* big centred title over the bottle (Apple product-page hero) */
+.tblock.title { left: 0; right: 0; top: 40%; transform: translateY(-50%); width: auto; max-width: none; text-align: center; }
+.tblock.title h2 { font-weight: 600; font-size: clamp(56px, 9.5vw, 168px); letter-spacing: -0.045em; line-height: 0.95; }
+.tblock.title p { margin: 18px auto 0; max-width: none; text-align: center; font-size: 17px; }
+@media (max-width: 760px) {
+  .tblock.title { top: 40%; bottom: auto; left: 16px; right: 16px; transform: translateY(-50%); }
+  .tblock.title h2 { font-size: 44px; }
+}
+
+/* split layout over the big angled bottle: brand left above the middle, name right below it */
+.tblock.split { inset: 0; top: 0; left: 0; width: auto; max-width: none; transform: none; }
+.tblock.split h2 .mask { position: absolute; white-space: normal; overflow: visible; clip-path: inset(0 -50vw); }  /* clip only vertically */
+.tblock.split h2 .mask:nth-child(1) {
+  left: 6vw; top: 30%;
+  font-size: clamp(20px, 2.4vw, 40px); font-weight: 500; letter-spacing: 0.14em;
+}
+.tblock.split h2 .mask:nth-child(2) {
+  right: 6vw; top: 60%; text-align: right;
+  font-size: clamp(34px, 5vw, 88px); font-weight: 600; letter-spacing: -0.035em;
+}
+@media (max-width: 760px) {
+  .tblock.split { inset: 0; bottom: auto; }
+  .tblock.split h2 .mask:nth-child(1) { left: 16px; top: 18%; font-size: 22px; }
+  .tblock.split h2 .mask:nth-child(2) { right: 16px; top: 72%; font-size: 40px; }
+}
+
+/* caption beside the centred bolt: kept in the left third so it never reaches the bottle */
+.tblock.narrow { width: min(30vw, 440px); }
+
+/* final dark grey block: 2x2 photo collage, top-right and bottom-left in black and white */
+#collage {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; visibility: hidden;
+  display: grid; grid-template: 1fr 1fr / 1fr 1fr; gap: clamp(8px, 1.2vw, 16px);
+  padding: clamp(16px, 4vw, 64px); background: #1d1d1f; will-change: transform;
+}
+#collage img { width: 100%; height: 100%; min-height: 0; object-fit: cover; display: block; }
+#collage img.bw { filter: grayscale(1); }
+
+/* block 3: the lower half of the screen fades into black over the bottle; the caption sits there */
+#fade {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 46%, rgba(0, 0, 0, 0.92) 58%, #000 64%);
+}
+.tblock.center { left: 0; right: 0; top: auto; bottom: 10vh; transform: none; width: auto; max-width: none; text-align: center; opacity: 0; will-change: transform; }
+/* heading and caption: one font, one size */
+.tblock.center h2, .tblock.center p {
+  font: 500 clamp(28px, 3vw, 46px)/1.25 -apple-system, "SF Pro Display", "Inter Tight", sans-serif;
+  letter-spacing: -0.02em;
+}
+.tblock.center p { margin: 6px auto 0; max-width: 1000px; color: #c9c9cc; }
+@media (max-width: 760px) { .tblock.center { left: 16px; right: 16px; bottom: 8vh; } }
+
+/* the signature at the very end */
+.tblock.sign { left: 0; right: 0; top: 50%; transform: translateY(-50%); width: auto; max-width: none; text-align: center; }
+.tblock.sign h2 { font-weight: 600; font-size: clamp(72px, 15vw, 260px); letter-spacing: -0.05em; line-height: 0.9; }
+@media (max-width: 760px) { .tblock.sign { top: 50%; bottom: auto; transform: translateY(-50%); } .tblock.sign h2 { font-size: 22vw; } }

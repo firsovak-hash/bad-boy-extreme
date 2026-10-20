@@ -1,0 +1,9 @@
+.DS_Store
+# sources and masters (not needed to run the site)
+media/
+# unused / switched-off assets
+assets/desert_scrub.mp4
+assets/hand.glb
+assets/hand_anchors.json
+assets/sand/
+assets/collage/
